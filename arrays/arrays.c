@@ -29,6 +29,7 @@ Array *create_array (int capacity) {
 
   // Allocate memory for elements
   arr->elements = malloc(sizeof(char *) * capacity);
+  return arr;
 }
 
 
@@ -55,7 +56,7 @@ void destroy_array(Array *arr) {
 void resize_array(Array *arr) {
 
   // Create a new element storage with double capacity
-  char *storage = create_array(2 * sizeof(arr));
+  char **storage = malloc(2 * (sizeof(arr)));
 
   // Copy elements into the new storage
   for (int i = 0; i < arr->count; i++) {
@@ -90,7 +91,8 @@ char *arr_read(Array *arr, int index) {
 
   // Throw an error if the index is greater than the current count
   if (index > arr->count) {
-    print("Index Error: provided index exceeds the highest index of the array");
+    printf("Index Error: provided index exceeds the highest index of the array");
+    return NULL;
   }
 
   // Otherwise, return the element at the given index
@@ -107,7 +109,7 @@ void arr_insert(Array *arr, char *element, int index) {
 
   // Throw an error if the index is greater than the current count
   if (index > arr->count) {
-    print("Index Error: provided index exceeds the highest index of the array");
+    printf("Index Error: provided index exceeds the highest index of the array");
   }
 
   // Resize the array if the number of elements is over capacity
@@ -134,11 +136,15 @@ void arr_append(Array *arr, char *element) {
 
   // Resize the array if the number of elements is over capacity
   // or throw an error if resize isn't implemented yet.
+  if (arr->count == arr->capacity) {
+    resize_array(arr);
+  }
 
   // Copy the element and add it to the end of the array
+  arr->elements[arr->count] = element;
 
   // Increment count by 1
-
+  arr->count += 1;
 }
 
 /*****
@@ -152,10 +158,30 @@ void arr_remove(Array *arr, char *element) {
   // Search for the first occurence of the element and remove it.
   // Don't forget to free its memory!
 
-  // Shift over every element after the removed element to the left one position
+  int foundIndex = 0;
+  for (int i = 0 ; i < arr->count; i++) {
+    if (foundIndex != 0) {
+      break;
+    }
+    if (arr->elements[i] == element) {
+      foundIndex = i;
+    }
+  }
+  
+  if (foundIndex) {
+    arr->elements[foundIndex] = NULL;
+    free(arr->elements[foundIndex]);
 
-  // Decrement count by 1
+    // Shift over every element after the removed element to the left one position
+    for (int j = 0; j < arr->count; j++) {
+      arr->elements[j] = arr->elements[j + 1];
+    }
 
+    // Decrement count by 1
+    arr->count -= 1;
+  } else {
+    printf("That item could not be found");
+  }
 }
 
 
