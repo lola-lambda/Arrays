@@ -91,13 +91,12 @@ char *arr_read(Array *arr, int index) {
 
   // Throw an error if the index is greater than the current count
   if (index >= arr->count) {
-    printf("Index Error: provided index exceeds the highest index of the array");
+    printf("Index Error: provided index exceeds the highest index of the array\n");
     return NULL;
   }
 
   // Otherwise, return the element at the given index
   else {
-    printf("hello %s\n", arr->elements[index]);
     return arr->elements[index];
   }
 }
@@ -110,7 +109,7 @@ void arr_insert(Array *arr, char *element, int index) {
 
   // Throw an error if the index is greater than the current count
   if (index > arr->count) {
-    printf("Index Error: provided index exceeds the highest index of the array");
+    printf("Index Error: provided index exceeds the highest index of the array\n");
   }
 
   // Resize the array if the number of elements is over capacity
@@ -174,14 +173,14 @@ void arr_remove(Array *arr, char *element) {
     free(arr->elements[foundIndex]);
 
     // Shift over every element after the removed element to the left one position
-    for (int j = 0; j < arr->count; j++) {
+    for (int j = foundIndex; j < arr->count; j++) {
       arr->elements[j] = arr->elements[j + 1];
     }
 
     // Decrement count by 1
     arr->count -= 1;
   } else {
-    printf("That item could not be found");
+    printf("That item could not be found\n");
   }
 }
 
