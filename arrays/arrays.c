@@ -58,7 +58,7 @@ void resize_array(Array *arr) {
   char *storage = create_array(2 * sizeof(arr));
 
   // Copy elements into the new storage
-  for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++) {
+  for (int i = 0; i < arr->count; i++) {
     storage[i] = arr->elements[i];
   }
 
@@ -89,8 +89,14 @@ void resize_array(Array *arr) {
 char *arr_read(Array *arr, int index) {
 
   // Throw an error if the index is greater than the current count
+  if (index > arr->count) {
+    print("Index Error: provided index exceeds the highest index of the array");
+  }
 
   // Otherwise, return the element at the given index
+  else {
+    return arr->elements[index];
+  }
 }
 
 
@@ -100,15 +106,25 @@ char *arr_read(Array *arr, int index) {
 void arr_insert(Array *arr, char *element, int index) {
 
   // Throw an error if the index is greater than the current count
+  if (index > arr->count) {
+    print("Index Error: provided index exceeds the highest index of the array");
+  }
 
   // Resize the array if the number of elements is over capacity
-
+  if (arr->count == arr->capacity) {
+    resize_array(arr);
+  }
+  
   // Move every element after the insert index to the right one position
+  for (int i = arr->count; i <= index; i--) {
+    arr->elements[i] = arr->elements[i + 1];
+  }
 
   // Copy the element and add it to the array
+  arr->elements[index] = element;
 
   // Increment count by 1
-
+  arr->count += 1;
 }
 
 /*****
